@@ -1,18 +1,15 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowUp, ArrowDown } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TopicData } from "@/types/types";
+import { ArrowUp, ArrowDown } from "lucide-react";
+import Link from "next/link";
 
-const topics = [
-  { name: "Strawberry", percentage: 31, trend: "down" },
-  { name: "Pizza", percentage: 86, trend: "up" },
-  { name: "Blueberry", percentage: 15, trend: "up" },
-  { name: "Hamburger", percentage: 3, trend: "up" },
-  { name: "Banana", percentage: 8, trend: "down" },
-  { name: "Cherry", percentage: 10, trend: "down" },
-]
-
-export function RelatedTopics() {
+export function RelatedTopics({
+  relatedTopics,
+}: {
+  relatedTopics?: TopicData[];
+}) {
   return (
     <Card className="bg-card">
       <CardHeader>
@@ -20,26 +17,35 @@ export function RelatedTopics() {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {topics.map((topic, index) => (
-            <div
+          {relatedTopics?.map((topic, index) => (
+            <Link
               key={index}
-              className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border"
+              href={`/topic/${topic.id}`}
+              className="hover:opacity-80 transition-opacity w-full"
             >
-              <span className="text-foreground font-medium">{topic.name}</span>
-              <div className="flex items-center gap-2">
-                {topic.trend === "up" ? (
-                  <ArrowUp className="h-5 w-5 text-primary" />
-                ) : (
-                  <ArrowDown className="h-5 w-5 text-warning" />
-                )}
-                <span className={`text-lg font-bold ${topic.trend === "up" ? "text-primary" : "text-warning"}`}>
-                  {topic.percentage.toString().padStart(2, "0")}%
+              <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border">
+                <span className="text-foreground font-medium">
+                  {topic.name}
                 </span>
+                <div className="flex items-center gap-2">
+                  {topic?.trend ?? 0 > 0 ? (
+                    <ArrowUp className="h-5 w-5 text-primary" />
+                  ) : (
+                    <ArrowDown className="h-5 w-5 text-warning" />
+                  )}
+                  <span
+                    className={`text-lg font-bold ${
+                      topic.trend ?? 0 > 0 ? "text-primary" : "text-warning"
+                    }`}
+                  >
+                    {topic.trend?.toString().padStart(2, "0")}%
+                  </span>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

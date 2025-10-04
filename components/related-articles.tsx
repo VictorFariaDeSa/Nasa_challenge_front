@@ -1,26 +1,14 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Article } from "@/types/types";
+import Link from "next/link";
 
-const articles = [
-  {
-    date: "2025 09 04",
-    title: "How to create orange carrots in space",
-    author: "Victor sá",
-  },
-  {
-    date: "2025 09 04",
-    title: "How to create orange carrots in space and try it eat",
-    author: "Victor sá",
-  },
-  {
-    date: "2025 09 04",
-    title: "How to create orange carrots in space",
-    author: "Victor sá",
-  },
-]
-
-export function RelatedArticles() {
+export function RelatedArticles({
+  relatedArticles,
+}: {
+  relatedArticles?: Article[];
+}) {
   return (
     <Card className="bg-card">
       <CardHeader>
@@ -28,17 +16,33 @@ export function RelatedArticles() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {articles.map((article, index) => (
-            <div key={index} className="flex items-center justify-between py-4 border-b border-border last:border-0">
-              <div className="flex items-center gap-8">
-                <span className="text-sm text-muted-foreground min-w-[100px]">{article.date}</span>
-                <span className="text-sm text-foreground">{article.title}</span>
+          {relatedArticles?.map((article, index) => (
+            <Link
+              key={index}
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <div className="flex items-center justify-between py-4 border-b border-border last:border-0">
+                <div className="flex items-center gap-8">
+                  <span className="text-sm text-muted-foreground min-w-[100px]">
+                    {article.publish_date}
+                  </span>
+                  <span className="text-sm text-foreground">
+                    {article.name}
+                  </span>
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  Author:{" "}
+                  {article.authors?.map((author) => author.name).join(", ") ||
+                    "N/A"}
+                </span>
               </div>
-              <span className="text-sm text-muted-foreground">Author: {article.author}</span>
-            </div>
+            </Link>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

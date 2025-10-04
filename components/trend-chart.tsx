@@ -1,76 +1,109 @@
-"use client"
+"use client";
 
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import type { CategoryData } from "@/types/types";
 
-const data = [
-  { year: 2022, carrot: 450, topic2: 320, topic3: 280 },
-  { year: 2023, carrot: 580, topic2: 420, topic3: 380 },
-  { year: 2024, carrot: 720, topic2: 550, topic3: 480 },
-  { year: 2025, carrot: 850, topic2: 680, topic3: 620 },
-  { year: 2026, carrot: 950, topic2: 780, topic3: 720 },
-]
+export function TrendChart({ categoryData }: { categoryData?: CategoryData }) {
+  const data = processChartData(categoryData || {});
+  const chartConfig = processConfig(categoryData || {});
 
-export function TrendChart() {
   return (
     <Card className="bg-card">
       <CardHeader>
-        <CardTitle className="text-foreground">Trend Analysis</CardTitle>
+        <CardTitle className="text-foreground">{categoryData?.name}</CardTitle>
       </CardHeader>
       <CardContent className="pr-2">
-        <ChartContainer
-          config={{
-            carrot: {
-              label: "Carrot",
-              color: "hsl(var(--chart-1))",
-            },
-            topic2: {
-              label: "Topico de nome 2",
-              color: "hsl(var(--chart-2))",
-            },
-            topic3: {
-              label: "Topico de nome 3",
-              color: "hsl(var(--chart-3))",
-            },
-          }}
-          className="h-[400px] w-full"
-        >
+        <ChartContainer config={chartConfig} className="h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+            <LineChart
+              data={data}
+              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+            >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis dataKey="year" className="text-muted-foreground" tick={{ fill: "hsl(var(--muted-foreground))" }} />
-              <YAxis className="text-muted-foreground" tick={{ fill: "hsl(var(--muted-foreground))" }} />
+              <XAxis
+                dataKey="year"
+                className="text-muted-foreground"
+                tick={{ fill: "var(--muted-foreground)" }}
+              />
+              <YAxis
+                className="text-muted-foreground"
+                tick={{ fill: "var(--muted-foreground)" }}
+              />
               <ChartTooltip content={<ChartTooltipContent />} />
               <Legend wrapperStyle={{ paddingTop: "20px" }} iconType="line" />
-              <Line
-                type="monotone"
-                dataKey="carrot"
-                stroke="var(--color-carrot)"
-                strokeWidth={3}
-                dot={{ fill: "var(--color-carrot)", r: 5 }}
-                activeDot={{ r: 7 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="topic2"
-                stroke="var(--color-topic2)"
-                strokeWidth={3}
-                dot={{ fill: "var(--color-topic2)", r: 5 }}
-                activeDot={{ r: 7 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="topic3"
-                stroke="var(--color-topic3)"
-                strokeWidth={3}
-                dot={{ fill: "var(--color-topic3)", r: 5 }}
-                activeDot={{ r: 7 }}
-              />
+              {!categoryData?.topics || categoryData.topics.length === 0 ? (
+                <></>
+              ) : (
+                categoryData.topics.map((topic, index) => (
+                  <Line
+                    key={topic.id}
+                    dataKey={topic.name.toLowerCase().replace(/\s+/g, "")} // Assuming data keys are formatted this way
+                    stroke={`var(--chart-${(index % 5) + 1})`}
+                    strokeWidth={3}
+                    activeDot={{ r: 7 }}
+                    dot={{ r: 4 }}
+                    connectNulls={true} // Recomendo manter por segurança
+                  />
+                ))
+              )}
             </LineChart>
           </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
+
+const processChartData = (categoryData: CategoryData) => {
+  if (!categoryData?.topics || categoryData.topics.length === 0) {
+    return [];
+  }
+
+  const dataMap = new Map<number, { year: number; [key: string]: number }>();
+
+  for (const topic of categoryData.topics) {
+    const dataKey = topic.name.toLowerCase().replace(/\s+/g, "");
+    for (const point of topic.metricPoints ?? []) {
+      if (!dataMap.has(point.year)) {
+        dataMap.set(point.year, { year: point.year });
+      }
+      const yearEntry = dataMap.get(point.year)!;
+      yearEntry[dataKey] = point.value;
+    }
+  }
+
+  // Converter o mapa para um array e ordenar por ano
+  const finalData = Array.from(dataMap.values()).sort(
+    (a, b) => a.year - b.year
+  );
+  return finalData;
+};
+
+const processConfig = (categoryData: CategoryData) => {
+  if (!categoryData?.topics || categoryData.topics.length === 0) {
+    return {};
+  }
+  return Object.fromEntries(
+    categoryData.topics.map((topic, index) => [
+      topic.name.toLowerCase().replace(/\s+/g, ""),
+      {
+        label: topic.name,
+        color: `var(--chart-${(index % 5) + 1})`,
+      },
+    ])
+  );
+};
