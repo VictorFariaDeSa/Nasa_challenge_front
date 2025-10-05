@@ -5,6 +5,3 @@
 
 export * from "./categories"
 export * from "./topics"
-export * from "./articles"
-export * from "./related-topics"
-export * from "./mentions"

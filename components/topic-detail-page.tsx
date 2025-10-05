@@ -5,6 +5,8 @@ import { DetailChart } from "@/components/detail-chart";
 import { RelatedArticles } from "@/components/related-articles";
 import { RelatedTopics } from "@/components/related-topics";
 import type { TopicData } from "@/types/types";
+import { capitalizeFirstLetter } from "@/lib/utils";
+import { TopicHeader } from "./topic-header";
 
 // Recebe os dados via props, em vez de buscá-los aqui
 export function TopicDetailPageContent({
@@ -14,12 +16,30 @@ export function TopicDetailPageContent({
 }) {
   return (
     <div className="min-h-screen bg-background">
+      <TopicHeader />
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Title and Search */}
+        {/* Title */}
         <div className="flex items-center justify-between mb-8 gap-4">
           <h2 className="text-3xl font-bold text-foreground">
-            {topicData.name}
+            {capitalizeFirstLetter(topicData.name)}
           </h2>
+          <div className="flex items-center gap-4">
+            {/* Total Mentions */}
+            <span className="text-sm text-muted-foreground">
+              {topicData.totalMentions} Total Mentions
+            </span>
+            {/* Trend */}
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium ${
+                (topicData.trend ?? 0) > 0
+                  ? "bg-positive/10 text-positive"
+                  : "bg-warning/10 text-warning"
+              }`}
+            >
+              {(topicData.trend ?? 0) > 0 ? "+" : ""}
+              {topicData.trend ?? 0}%
+            </span>
+          </div>
         </div>
 
         {/* O resto do seu JSX continua aqui... */}
@@ -34,7 +54,7 @@ export function TopicDetailPageContent({
               <CardTitle className="text-foreground">Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed text-justify">
                 {topicData.summary}
               </p>
             </CardContent>
@@ -50,11 +70,11 @@ export function TopicDetailPageContent({
         </div>
 
         <div className="mb-8">
-          <RelatedArticles relatedArticles={topicData.relatedArticles} />
+          <RelatedArticles relatedArticles={topicData.articles} />
         </div>
 
         <div>
-          <RelatedTopics relatedTopics={topicData.relatedTopics} />
+          <RelatedTopics relatedTopics={topicData.related_topics} />
         </div>
       </div>
     </div>

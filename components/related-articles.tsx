@@ -16,7 +16,7 @@ export function RelatedArticles({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {relatedArticles?.map((article, index) => (
+          {relatedArticles?.slice(0, 5).map((article, index) => (
             <Link
               key={index}
               href={article.link}
@@ -29,12 +29,12 @@ export function RelatedArticles({
                   <span className="text-sm text-muted-foreground min-w-[100px]">
                     {article.publish_date}
                   </span>
-                  <span className="text-sm text-foreground">
+                  <span className="text-sm text-foreground min-w-xl">
                     {article.name}
                   </span>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  Author:{" "}
+                <span className="text-sm text-muted-foreground overflow-hidden whitespace-nowrap text-ellipsis max-w-xs">
+                  Authors:{" "}
                   {article.authors?.map((author) => author.name).join(", ") ||
                     "N/A"}
                 </span>

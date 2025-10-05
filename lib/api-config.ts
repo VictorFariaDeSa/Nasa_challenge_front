@@ -23,16 +23,8 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Categories
   categories: "/categories",
-  categoryDetail: (id: string) => `/categories/${id}`,
 
   // Topics
   topics: "/topics",
-  topicDetail: (id: string) => `/topics/${id}`,
-  topicChart: (id: string) => `/topics/${id}/chart`,
-  topicArticles: (id: string) => `/topics/${id}/articles`,
-  topicRelated: (id: string) => `/topics/${id}/related`,
-  topicMentions: (id: string) => `/topics/${id}/mentions`,
-
-  // Search
-  search: "/search",
+  topicDetail: (id: string) => `/topic/${id}`,
 } as const

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TopicData } from "@/types/types";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import Link from "next/link";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 export function RelatedTopics({
   relatedTopics,
@@ -25,17 +26,17 @@ export function RelatedTopics({
             >
               <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border border-border">
                 <span className="text-foreground font-medium">
-                  {topic.name}
+                  {capitalizeFirstLetter(topic.name)}
                 </span>
                 <div className="flex items-center gap-2">
-                  {topic?.trend ?? 0 > 0 ? (
-                    <ArrowUp className="h-5 w-5 text-primary" />
+                  {(topic?.trend ?? 0) > 0 ? (
+                    <ArrowUp className="h-5 w-5 text-positive" />
                   ) : (
                     <ArrowDown className="h-5 w-5 text-warning" />
                   )}
                   <span
                     className={`text-lg font-bold ${
-                      topic.trend ?? 0 > 0 ? "text-primary" : "text-warning"
+                      (topic?.trend ?? 0) > 0 ? "text-positive" : "text-warning"
                     }`}
                   >
                     {topic.trend?.toString().padStart(2, "0")}%

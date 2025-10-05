@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import type { TopicData } from "@/types/types";
 import Link from "next/link";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 export function MetricCard({ topicData }: { topicData: TopicData }) {
-  const isPositive = topicData.trend ?? 0 > 0;
+  const isPositive = (topicData.trend ?? 0) > 0;
 
   return (
     <Link
@@ -17,7 +18,7 @@ export function MetricCard({ topicData }: { topicData: TopicData }) {
       <Card className="bg-card overflow-hidden cursor-pointer">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-muted-foreground">
-            {topicData.name}
+            {capitalizeFirstLetter(topicData.name)}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -30,12 +31,12 @@ export function MetricCard({ topicData }: { topicData: TopicData }) {
 
           <div className="flex items-center gap-1 text-sm">
             {isPositive ? (
-              <TrendingUp className="h-4 w-4 text-primary" />
+              <TrendingUp className="h-4 w-4 text-positive" />
             ) : (
-              <TrendingDown className="h-4 w-4 text-destructive" />
+              <TrendingDown className="h-4 w-4 text-warning" />
             )}
-            <span className={isPositive ? "text-primary" : "text-destructive"}>
-              {topicData.trend ? Math.abs(topicData.trend) : <></>}%
+            <span className={isPositive ? "text-positive" : "text-warning"}>
+              {topicData.trend ? Math.abs(topicData.trend) : <>0</>}%
             </span>
           </div>
 
@@ -48,11 +49,11 @@ export function MetricCard({ topicData }: { topicData: TopicData }) {
                 <Line
                   key={topicData.id}
                   type="monotone"
-                  dataKey="mention_value"
+                  dataKey="total_mentions"
                   stroke="var(--chart-base)"
                   strokeWidth={3}
-                  dot={{ fill: "var(--chart-base)", r: 4 }}
-                  activeDot={{ r: 6 }}
+                  dot={{ fill: "var(--chart-base)", r: 1 }}
+                  activeDot={{ r: 1 }}
                   animationDuration={1000}
                 />
               </LineChart>

@@ -1,26 +1,27 @@
 export interface TopicData {
   id: string;
   name: string;
-  summary?: string;
+  summary: string;
 
-  relatedArticles?: Article[];
-  relatedTopics?: TopicData[];
+  articles?: Article[];
+  related_topics?: TopicData[];
   mentions?: Mentions[];
+  categories?: CategoryData[];
 
   totalMentions?: number;
   trend?: number;
 }
 
 export interface CategoryData {
-  id: string;
+  id?: string;
   name?: string;
   summary?: string;
   topics?: TopicData[];
 }
 
 export interface Mentions {
-  mention_date: number;
-  mention_value: number;
+  year: number;
+  total_mentions: number;
 }
 
 export interface Article {

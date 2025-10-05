@@ -1,16 +1,27 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { CategoryData } from "@/types/types";
 
-export function CategoryFilter({ categories }: { categories: CategoryData[] }) {
-  const [selected, setSelected] = useState<string>("plants");
+interface CategoryFilterProps {
+  categories: CategoryData[];
+  selectedCategory: string | undefined;
+  onCategoryChange: (category: string | undefined) => void;
+}
 
-  const toggleCategory = (id: string) => {
-    setSelected(id);
+export function CategoryFilter({
+  categories,
+  selectedCategory,
+  onCategoryChange,
+}: CategoryFilterProps) {
+  const toggleCategory = (name: string) => {
+    if (selectedCategory === name) {
+      onCategoryChange(undefined);
+      return;
+    }
+    onCategoryChange(name);
   };
 
   return (
@@ -19,12 +30,12 @@ export function CategoryFilter({ categories }: { categories: CategoryData[] }) {
         <CardTitle className="text-foreground">Categories</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {categories?.map((category) => (
-          <div key={category.id} className="flex items-center gap-3">
+        {categories?.map((category, index) => (
+          <div key={index} className="flex items-center gap-3">
             <Checkbox
               id={category.id}
-              checked={selected.includes(category.id)}
-              onCheckedChange={() => toggleCategory(category.id)}
+              checked={selectedCategory === category?.name}
+              onCheckedChange={() => toggleCategory(category.name ?? "")}
               className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
             />
             <Label

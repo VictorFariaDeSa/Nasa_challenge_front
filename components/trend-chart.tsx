@@ -18,8 +18,8 @@ import {
 import type { CategoryData } from "@/types/types";
 
 export function TrendChart({ categoryData }: { categoryData?: CategoryData }) {
-  const data = processChartData(categoryData || {});
-  const chartConfig = processConfig(categoryData || {});
+  const data = processChartData(categoryData);
+  const chartConfig = processConfig(categoryData);
 
   return (
     <Card className="bg-card">
@@ -54,8 +54,8 @@ export function TrendChart({ categoryData }: { categoryData?: CategoryData }) {
                     dataKey={topic.name.toLowerCase().replace(/\s+/g, "")} // Assuming data keys are formatted this way
                     stroke={`var(--chart-${(index % 5) + 1})`}
                     strokeWidth={3}
-                    activeDot={{ r: 7 }}
-                    dot={{ r: 4 }}
+                    activeDot={{ r: 4 }}
+                    dot={{ r: 2 }}
                     connectNulls={true} // Recomendo manter por segurança
                   />
                 ))
@@ -68,7 +68,7 @@ export function TrendChart({ categoryData }: { categoryData?: CategoryData }) {
   );
 }
 
-const processChartData = (categoryData: CategoryData) => {
+const processChartData = (categoryData: CategoryData | undefined) => {
   if (!categoryData?.topics || categoryData.topics.length === 0) {
     return [];
   }
@@ -78,11 +78,11 @@ const processChartData = (categoryData: CategoryData) => {
   for (const topic of categoryData.topics) {
     const dataKey = topic.name.toLowerCase().replace(/\s+/g, "");
     for (const point of topic.mentions ?? []) {
-      if (!dataMap.has(point.mention_date)) {
-        dataMap.set(point.mention_date, { year: point.mention_date });
+      if (!dataMap.has(point.year)) {
+        dataMap.set(point.year, { year: point.year });
       }
-      const yearEntry = dataMap.get(point.mention_date)!;
-      yearEntry[dataKey] = point.mention_value;
+      const yearEntry = dataMap.get(point.year)!;
+      yearEntry[dataKey] = point.total_mentions;
     }
   }
 
@@ -93,7 +93,7 @@ const processChartData = (categoryData: CategoryData) => {
   return finalData;
 };
 
-const processConfig = (categoryData: CategoryData) => {
+const processConfig = (categoryData: CategoryData | undefined) => {
   if (!categoryData?.topics || categoryData.topics.length === 0) {
     return {};
   }
