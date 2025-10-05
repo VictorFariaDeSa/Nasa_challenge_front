@@ -1,25 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { CategoryData } from "@/types/types";
 
-const categories = [
-  { id: "plants", label: "Plants" },
-  { id: "food", label: "Food" },
-  { id: "planets", label: "Planets" },
-  { id: "engineering", label: "Engineering" },
-  { id: "meteors", label: "Meteors" },
-  { id: "biology", label: "Biology" },
-]
-
-export function CategoryFilter() {
-  const [selected, setSelected] = useState<string[]>(["plants", "food"])
+export function CategoryFilter({ categories }: { categories: CategoryData[] }) {
+  const [selected, setSelected] = useState<string>("plants");
 
   const toggleCategory = (id: string) => {
-    setSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
-  }
+    setSelected(id);
+  };
 
   return (
     <Card className="bg-card">
@@ -27,7 +19,7 @@ export function CategoryFilter() {
         <CardTitle className="text-foreground">Categories</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <div key={category.id} className="flex items-center gap-3">
             <Checkbox
               id={category.id}
@@ -39,11 +31,11 @@ export function CategoryFilter() {
               htmlFor={category.id}
               className="text-sm font-medium leading-none cursor-pointer text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              {category.label}
+              {category.name}
             </Label>
           </div>
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }

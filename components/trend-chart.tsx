@@ -77,12 +77,12 @@ const processChartData = (categoryData: CategoryData) => {
 
   for (const topic of categoryData.topics) {
     const dataKey = topic.name.toLowerCase().replace(/\s+/g, "");
-    for (const point of topic.metricPoints ?? []) {
-      if (!dataMap.has(point.year)) {
-        dataMap.set(point.year, { year: point.year });
+    for (const point of topic.mentions ?? []) {
+      if (!dataMap.has(point.mention_date)) {
+        dataMap.set(point.mention_date, { year: point.mention_date });
       }
-      const yearEntry = dataMap.get(point.year)!;
-      yearEntry[dataKey] = point.value;
+      const yearEntry = dataMap.get(point.mention_date)!;
+      yearEntry[dataKey] = point.mention_value;
     }
   }
 

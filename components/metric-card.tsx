@@ -42,13 +42,13 @@ export function MetricCard({ topicData }: { topicData: TopicData }) {
           <div className="h-20 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={topicData.metricPoints}
+                data={topicData.mentions}
                 margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
               >
                 <Line
                   key={topicData.id}
                   type="monotone"
-                  dataKey="value"
+                  dataKey="mention_value"
                   stroke="var(--chart-base)"
                   strokeWidth={3}
                   dot={{ fill: "var(--chart-base)", r: 4 }}
@@ -58,14 +58,6 @@ export function MetricCard({ topicData }: { topicData: TopicData }) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-
-          {/* <div className="flex justify-between text-xs text-muted-foreground pt-1">
-            <span>{data[0].year}</span>
-            <span>{data[1].year}</span>
-            <span>{data[2].year}</span>
-            <span>{data[3].year}</span>
-            <span>{data[4].year}</span>
-          </div> */}
         </CardContent>
       </Card>
     </Link>

@@ -19,12 +19,12 @@ export function DetailChart({ topicData }: { topicData: TopicData }) {
         <div className="h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
-              data={topicData.metricPoints}
+              data={topicData.mentions}
               margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis
-                dataKey="year"
+                dataKey="mention_date"
                 className="text-muted-foreground"
                 tick={{ fill: "var(--muted-foreground)" }}
               />
@@ -43,7 +43,7 @@ export function DetailChart({ topicData }: { topicData: TopicData }) {
               <Line
                 key={topicData.id}
                 type="monotone"
-                dataKey="value"
+                dataKey="mention_value"
                 stroke="var(--chart-base)"
                 strokeWidth={3}
                 dot={{ fill: "var(--chart-base)" }}
