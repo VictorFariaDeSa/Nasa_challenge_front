@@ -47,7 +47,6 @@ export function DashboardHeader({
                   ></path>{" "}
                 </g>
               </svg>
-              {/* <TrendingUp className="h-6 w-6 text-primary-foreground" /> */}
             </div>
             <Link href="/" className="hover:opacity-80 transition-opacity">
               <div>

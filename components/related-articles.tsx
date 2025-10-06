@@ -24,7 +24,7 @@ export function RelatedArticles({
               rel="noopener noreferrer"
               className="hover:opacity-80 transition-opacity"
             >
-              <div className="flex items-center justify-between py-4 border-b border-border last:border-0">
+              <div className="flex items-center justify-between py-4 border-b border-border last:border-0 gap-2">
                 <div className="flex items-center gap-8">
                   <span className="text-sm text-muted-foreground min-w-[100px]">
                     {article.publish_date}
